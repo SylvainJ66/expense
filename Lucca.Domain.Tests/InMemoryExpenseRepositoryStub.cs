@@ -5,7 +5,7 @@ namespace Lucca.Domain.Tests;
 
 public class InMemoryExpenseRepositoryStub : IExpenseRepository
 {
-    public IEnumerable<Expense> Expenses { get; private set; } = new List<Expense>();
+    public IEnumerable<Expense> Expenses { get; } = new List<Expense>();
     public Task Save(Expense expense)
     {
         ((List<Expense>)Expenses).Add(expense);

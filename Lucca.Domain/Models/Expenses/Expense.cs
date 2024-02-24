@@ -5,6 +5,14 @@ namespace Lucca.Domain.Models.Expenses;
 
 public class Expense
 {
+    public string UserId { get; }
+    public DateTime ExpenseDate { get; }
+    public DateTime CreatedAt { get; }
+    public ExpenseType Type { get; }
+    public decimal Amount { get; }
+    public string Currency { get; }
+    public string Comment { get; }
+    
     private Expense(
         string userId, 
         DateTime expenseDate,
@@ -22,14 +30,6 @@ public class Expense
         Currency = currency;
         Comment = comment;
     }
-
-    public string UserId { get; }
-    public DateTime ExpenseDate { get; }
-    public DateTime CreatedAt { get; }
-    public ExpenseType Type { get; }
-    public decimal Amount { get; }
-    public string Currency { get; }
-    public string Comment { get; }
 
     public static Expense Create(
         IDateTimeProvider dateTimeProvider,

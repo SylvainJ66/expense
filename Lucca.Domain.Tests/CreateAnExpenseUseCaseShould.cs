@@ -2,6 +2,8 @@ using FluentAssertions;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
 using Lucca.Domain.Models.Expenses.Exceptions;
+using Lucca.Domain.Models.IdProvider;
+using Lucca.Domain.Models.Users;
 using Lucca.Domain.UseCases.CreateAnExpense;
 
 namespace Lucca.Domain.Tests;
@@ -9,11 +11,21 @@ namespace Lucca.Domain.Tests;
 public class CreateAnExpenseUseCaseShould
 {
     private readonly InMemoryExpenseRepositoryStub _expenseRepository = new();
+    private readonly InMemoryUserRepositoryStub _userRepository = new();
     private readonly DeterministicDateTimeProvider _dateTimeProvider = new();
+    private readonly DeterministicIdProvider _idProvider = new();
+    private readonly User _user;
 
     public CreateAnExpenseUseCaseShould()
     {
         _dateTimeProvider.DateOfNow = new DateTime(2024, 1, 2, 14, 15, 3);
+        _idProvider.Id = "user-id";
+        _user = User.Create(
+            idProvider: _idProvider,
+            firstname: "John", 
+            name: "Doh", 
+            currency: "EUR");
+        _userRepository.FeedWith(_user);
     }
     
     [Fact]
@@ -21,7 +33,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: "user-id",
+            UserId: _user.UserId,
             Type: ExpenseType.Restaurant,
             Amount: 100,
             ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -29,14 +41,16 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        await new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        await new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
         
         _expenseRepository.Expenses.Should().BeEquivalentTo(new List<Expense>
         {
             Expense.Create
             (
                 dateTimeProvider: _dateTimeProvider,
-                userId: "user-id",
+                userId: _user.UserId,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
                 type: ExpenseType.Restaurant,
                 amount: 100,
@@ -51,7 +65,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: "user-id",
+            UserId: _user.UserId,
             ExpenseDate: new DateTime(2025, 1, 2, 00, 00, 00),
             Type: ExpenseType.Restaurant,
             Amount: 100,
@@ -59,7 +73,9 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        var action = () => new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseDateInTheFutureException>()
             .WithMessage(" : Expense date cannot be in the future");
@@ -70,7 +86,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: "user-id",
+            UserId: _user.UserId,
             ExpenseDate: new DateTime(2023, 10, 2, 10, 15, 3),
             Type: ExpenseType.Restaurant,
             Amount: 100,
@@ -78,7 +94,9 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        var action = () => new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseDateMoreThanThreeMonthsInThePastException>()
             .WithMessage(" : Expense date cannot be more than three months in the past");
@@ -91,7 +109,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: "user-id",
+            UserId: _user.UserId,
             Type: ExpenseType.Restaurant,
             Amount: 100,
             ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -99,7 +117,9 @@ public class CreateAnExpenseUseCaseShould
             Comment: comment
         );
         
-        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        var action = () => new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseWithNoCommentException>()
             .WithMessage(" : Expense should have a comment");
@@ -108,23 +128,22 @@ public class CreateAnExpenseUseCaseShould
     [Fact]
     public async Task User_cannot_make_same_expense_twice()
     {
-        const string userId = "user-id";
         var expenseDate = new DateTime(2024, 1, 1, 00, 00, 00);
         const int amount = 100;
         
         await _expenseRepository.FeedWith(Expense.Create(
             dateTimeProvider: _dateTimeProvider,
-            userId: userId,
+            userId: _user.UserId,
             type: ExpenseType.Hotel,
             expenseDate: expenseDate,
             amount: amount,
-            currency: "USD",
+            currency: "EUR",
             comment: "Hotel"
         ));
         
         var command = new CreateAnExpenseCommand
         (
-            UserId: userId,
+            UserId: _user.UserId,
             Type: ExpenseType.Restaurant,
             Amount: amount,
             ExpenseDate: expenseDate,
@@ -132,9 +151,32 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        var action = () => new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseCannotBeMadeTwiceException>()
             .WithMessage(" : Expense cannot be made twice");
+    }
+
+    [Fact]
+    public async Task Have_same_currency_that_the_user()
+    {
+        var command = new CreateAnExpenseCommand
+        (
+            UserId: _user.UserId,
+            Type: ExpenseType.Restaurant,
+            Amount: 100,
+            ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
+            Currency: "USD",
+            Comment: "Lunch"
+        );
+        
+        var action = () => new CreateAnExpenseUseCase(
+            _expenseRepository, _userRepository, _dateTimeProvider)
+            .Handle(command);
+
+        await action.Should().ThrowExactlyAsync<ExpenseAndUserCannotHaveDifferentCurrency>()
+            .WithMessage(" : Expense and user cannot have different currency");
     }
 }
