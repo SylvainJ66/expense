@@ -23,4 +23,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lucca.Domain\Lucca.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

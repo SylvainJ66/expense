@@ -1,14 +1,21 @@
 using FluentAssertions;
+using Lucca.Domain.Models;
+using Lucca.Domain.Models.DateTimeProvider;
+using Lucca.Domain.Models.Expenses;
+using Lucca.Domain.UseCases.CreateAnExpense;
 
 namespace Lucca.Domain.Tests;
 
 public class CreateAnExpenseUseCaseShould
 {
-    private readonly InMemoryExpenseRepositoryStub _expenseRepository = new InMemoryExpenseRepositoryStub();
+    private readonly InMemoryExpenseRepositoryStub _expenseRepository = new();
+    private readonly DeterministicDateTimeProvider _dateTimeProvider = new();
     
     [Fact]
     public async Task CreateAnExpense()
     {
+        _dateTimeProvider.DateOfNow = new DateTime(2024, 1, 2, 14, 15, 3);
+        
         var command = new CreateAnExpenseCommand
         (
             UserId: "user-id",
@@ -18,14 +25,14 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        await new CreateAnExpenseUseCase().Handle(command);
+        await new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
         
         _expenseRepository.Expenses.Should().BeEquivalentTo(new List<Expense>
         {
             new
             (
                 UserId: "user-id",
-                CreatedAt: DateTime.UtcNow,
+                CreatedAt: _dateTimeProvider.UtcNow(),
                 Type: ExpenseType.Restaurant,
                 Amount: 100,
                 Currency: "EUR",
@@ -34,47 +41,3 @@ public class CreateAnExpenseUseCaseShould
         });
     }
 }
-
-internal class InMemoryExpenseRepositoryStub : IExpenseRepository
-{
-    public IEnumerable<Expense> Expenses { get; } = new List<Expense>();
-    public Task Save(Expense expense)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-internal interface IExpenseRepository
-{
-    Task Save(Expense expense);
-}
-
-public class CreateAnExpenseUseCase
-{
-    public async Task Handle(CreateAnExpenseCommand command)
-    {
-        
-    }
-}
-
-public record struct CreateAnExpenseCommand(
-    string UserId, 
-    ExpenseType Type, 
-    int Amount, 
-    string Currency, 
-    string Comment);
-
-public enum ExpenseType
-{
-    Restaurant,
-    Hotel,
-    Misc
-}
-
-public record Expense(
-    string UserId, 
-    DateTime CreatedAt, 
-    object Type, 
-    int Amount, 
-    string Currency, 
-    string Comment);
