@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Lucca.Domain.Models;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
 using Lucca.Domain.UseCases.CreateAnExpense;
@@ -82,5 +81,26 @@ public class CreateAnExpenseUseCaseShould
         
         await action.Should().ThrowExactlyAsync<ExpenseDateMoreThanThreeMonthsInThePastException>()
             .WithMessage(" : Expense date cannot be more than three months in the past");
+    }
+    
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public async Task Avoid_expense_with_empty_comment(string comment)
+    {
+        var command = new CreateAnExpenseCommand
+        (
+            UserId: "user-id",
+            Type: ExpenseType.Restaurant,
+            Amount: 100,
+            ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
+            Currency: "EUR",
+            Comment: comment
+        );
+        
+        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        
+        await action.Should().ThrowExactlyAsync<ExpenseWithNoCommentException>()
+            .WithMessage(" : Expense should have a comment");
     }
 }

@@ -23,6 +23,7 @@ public class CreateAnExpenseUseCase
     {
         ThrowIfDateIsInTheFuture(command.ExpenseDate);
         ThrowIfDateIsMoreThanThreeMonthsInThePast(command.ExpenseDate);
+        ThrowIfNoComment(command.Comment);
         
         await _expenseRepository.Save(new Expense
         (
@@ -34,6 +35,12 @@ public class CreateAnExpenseUseCase
             Currency: command.Currency,
             Comment: command.Comment
         ));
+    }
+
+    private void ThrowIfNoComment(string commandComment)
+    {
+        if(string.IsNullOrWhiteSpace(commandComment))
+            throw new ExpenseWithNoCommentException();
     }
 
     private void ThrowIfDateIsInTheFuture(DateTime commandExpenseDate)
