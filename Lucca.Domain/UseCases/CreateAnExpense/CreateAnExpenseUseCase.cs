@@ -2,6 +2,7 @@ using Lucca.Domain.Gateways;
 using Lucca.Domain.Models;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
+using Lucca.Domain.Tests;
 
 namespace Lucca.Domain.UseCases.CreateAnExpense;
 
@@ -21,6 +22,7 @@ public class CreateAnExpenseUseCase
     public async Task Handle(CreateAnExpenseCommand command)
     {
         ThrowIfDateIsInTheFuture(command.ExpenseDate);
+        ThrowIfDateIsMoreThanThreeMonthsInThePast(command.ExpenseDate);
         
         await _expenseRepository.Save(new Expense
         (
@@ -38,5 +40,11 @@ public class CreateAnExpenseUseCase
     {
         if(commandExpenseDate > _dateTimeProvider.UtcNow())
             throw new ExpenseDateInTheFutureException();
+    }
+    
+    private void ThrowIfDateIsMoreThanThreeMonthsInThePast(DateTime commandExpenseDate)
+    {
+        if(commandExpenseDate < _dateTimeProvider.UtcNow().AddMonths(-3))
+            throw new ExpenseDateMoreThanThreeMonthsInThePastException();
     }
 }

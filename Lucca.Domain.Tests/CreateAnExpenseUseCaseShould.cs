@@ -64,4 +64,23 @@ public class CreateAnExpenseUseCaseShould
         await action.Should().ThrowExactlyAsync<ExpenseDateInTheFutureException>()
             .WithMessage(" : Expense date cannot be in the future");
     }
+
+    [Fact]
+    public async Task Avoid_date_more_three_month_in_the_past()
+    {
+        var command = new CreateAnExpenseCommand
+        (
+            UserId: "user-id",
+            ExpenseDate: new DateTime(2023, 10, 2, 10, 15, 3),
+            Type: ExpenseType.Restaurant,
+            Amount: 100,
+            Currency: "EUR",
+            Comment: "Lunch"
+        );
+        
+        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        
+        await action.Should().ThrowExactlyAsync<ExpenseDateMoreThanThreeMonthsInThePastException>()
+            .WithMessage(" : Expense date cannot be more than three months in the past");
+    }
 }
