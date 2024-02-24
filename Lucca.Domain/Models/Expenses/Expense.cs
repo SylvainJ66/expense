@@ -5,6 +5,6 @@ public record Expense(
     DateTime ExpenseDate,
     DateTime CreatedAt, 
     object Type, 
-    int Amount, 
+    decimal Amount, 
     string Currency, 
     string Comment);

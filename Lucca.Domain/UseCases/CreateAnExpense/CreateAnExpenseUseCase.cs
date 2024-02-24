@@ -58,7 +58,7 @@ public class CreateAnExpenseUseCase
     private async Task ThrowIfExpenseMadeTwice(
         string commandUserId, 
         DateTime commandExpenseDate, 
-        int commandAmount)
+        decimal commandAmount)
     {
         var expenses = await _expenseRepository.GetBy(
             commandUserId, commandExpenseDate, commandAmount);

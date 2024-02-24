@@ -8,7 +8,7 @@ Règles de validation d'une dépense :
 [ ] - La devise de la dépense doit être identique à celle de l'utilisateur.
 
 ## Afaire
-[ ] - Passer en decimal le amount
+[X] - Passer en decimal le amount
 [ ] - Monter les methodes dans l'object (factory method)
 [ ] - Repository
 [ ] - API

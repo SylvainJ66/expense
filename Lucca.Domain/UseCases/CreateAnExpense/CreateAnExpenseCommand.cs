@@ -5,7 +5,7 @@ namespace Lucca.Domain.UseCases.CreateAnExpense;
 public record struct CreateAnExpenseCommand(
     string UserId, 
     ExpenseType Type, 
-    int Amount, 
+    decimal Amount, 
     DateTime ExpenseDate,
     string Currency, 
     string Comment);

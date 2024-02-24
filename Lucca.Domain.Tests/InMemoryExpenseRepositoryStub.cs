@@ -15,7 +15,7 @@ public class InMemoryExpenseRepositoryStub : IExpenseRepository
     public Task<IEnumerable<Expense>> GetBy(
         string userId, 
         DateTime expenseDate, 
-        int amount)
+        decimal amount)
     {
         return Task.FromResult(
             Expenses.Where(expense => 

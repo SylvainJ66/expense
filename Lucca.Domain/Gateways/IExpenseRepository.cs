@@ -8,5 +8,5 @@ public interface IExpenseRepository
     Task<IEnumerable<Expense>> GetBy(
         string userId, 
         DateTime expenseDate, 
-        int amount);
+        decimal amount);
 }
