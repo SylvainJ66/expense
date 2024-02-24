@@ -9,7 +9,7 @@ Règles de validation d'une dépense :
 
 ## Afaire
 [X] - Passer en decimal le amount
-[ ] - Monter les methodes dans l'object (factory method)
+[X] - Monter les methodes dans l'object (factory method)
 [ ] - Repository
 [ ] - API
 

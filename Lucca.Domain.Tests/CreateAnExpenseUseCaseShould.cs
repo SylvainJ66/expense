@@ -33,15 +33,15 @@ public class CreateAnExpenseUseCaseShould
         
         _expenseRepository.Expenses.Should().BeEquivalentTo(new List<Expense>
         {
-            new
+            Expense.Create
             (
-                UserId: "user-id",
-                ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
-                CreatedAt: _dateTimeProvider.UtcNow(),
-                Type: ExpenseType.Restaurant,
-                Amount: 100,
-                Currency: "EUR",
-                Comment: "Lunch"
+                dateTimeProvider: _dateTimeProvider,
+                userId: "user-id",
+                expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
+                type: ExpenseType.Restaurant,
+                amount: 100,
+                currency: "EUR",
+                comment: "Lunch"
             )
         });
     }
@@ -112,14 +112,14 @@ public class CreateAnExpenseUseCaseShould
         var expenseDate = new DateTime(2024, 1, 1, 00, 00, 00);
         const int amount = 100;
         
-        await _expenseRepository.FeedWith(new Expense(
-            UserId: userId,
-            Type: ExpenseType.Hotel,
-            ExpenseDate: expenseDate,
-            CreatedAt: _dateTimeProvider.UtcNow(),
-            Amount: amount,
-            Currency: "USD",
-            Comment: "Hotel"
+        await _expenseRepository.FeedWith(Expense.Create(
+            dateTimeProvider: _dateTimeProvider,
+            userId: userId,
+            type: ExpenseType.Hotel,
+            expenseDate: expenseDate,
+            amount: amount,
+            currency: "USD",
+            comment: "Hotel"
         ));
         
         var command = new CreateAnExpenseCommand
