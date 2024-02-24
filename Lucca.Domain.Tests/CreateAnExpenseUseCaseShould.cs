@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
+using Lucca.Domain.Models.Expenses.Exceptions;
 using Lucca.Domain.UseCases.CreateAnExpense;
 
 namespace Lucca.Domain.Tests;
@@ -102,5 +103,38 @@ public class CreateAnExpenseUseCaseShould
         
         await action.Should().ThrowExactlyAsync<ExpenseWithNoCommentException>()
             .WithMessage(" : Expense should have a comment");
+    }
+    
+    [Fact]
+    public async Task User_cannot_make_same_expense_twice()
+    {
+        const string userId = "user-id";
+        var expenseDate = new DateTime(2024, 1, 1, 00, 00, 00);
+        const int amount = 100;
+        
+        await _expenseRepository.FeedWith(new Expense(
+            UserId: userId,
+            Type: ExpenseType.Hotel,
+            ExpenseDate: expenseDate,
+            CreatedAt: _dateTimeProvider.UtcNow(),
+            Amount: amount,
+            Currency: "USD",
+            Comment: "Hotel"
+        ));
+        
+        var command = new CreateAnExpenseCommand
+        (
+            UserId: userId,
+            Type: ExpenseType.Restaurant,
+            Amount: amount,
+            ExpenseDate: expenseDate,
+            Currency: "EUR",
+            Comment: "Lunch"
+        );
+        
+        var action = () => new CreateAnExpenseUseCase(_expenseRepository, _dateTimeProvider).Handle(command);
+        
+        await action.Should().ThrowExactlyAsync<ExpenseCannotBeMadeTwiceException>()
+            .WithMessage(" : Expense cannot be made twice");
     }
 }

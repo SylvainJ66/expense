@@ -1,8 +1,7 @@
 using Lucca.Domain.Gateways;
-using Lucca.Domain.Models;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
-using Lucca.Domain.Tests;
+using Lucca.Domain.Models.Expenses.Exceptions;
 
 namespace Lucca.Domain.UseCases.CreateAnExpense;
 
@@ -24,6 +23,7 @@ public class CreateAnExpenseUseCase
         ThrowIfDateIsInTheFuture(command.ExpenseDate);
         ThrowIfDateIsMoreThanThreeMonthsInThePast(command.ExpenseDate);
         ThrowIfNoComment(command.Comment);
+        await ThrowIfExpenseMadeTwice(command.UserId, command.ExpenseDate, command.Amount);
         
         await _expenseRepository.Save(new Expense
         (
@@ -37,12 +37,6 @@ public class CreateAnExpenseUseCase
         ));
     }
 
-    private void ThrowIfNoComment(string commandComment)
-    {
-        if(string.IsNullOrWhiteSpace(commandComment))
-            throw new ExpenseWithNoCommentException();
-    }
-
     private void ThrowIfDateIsInTheFuture(DateTime commandExpenseDate)
     {
         if(commandExpenseDate > _dateTimeProvider.UtcNow())
@@ -53,5 +47,22 @@ public class CreateAnExpenseUseCase
     {
         if(commandExpenseDate < _dateTimeProvider.UtcNow().AddMonths(-3))
             throw new ExpenseDateMoreThanThreeMonthsInThePastException();
+    }
+    
+    private void ThrowIfNoComment(string commandComment)
+    {
+        if(string.IsNullOrWhiteSpace(commandComment))
+            throw new ExpenseWithNoCommentException();
+    }
+    
+    private async Task ThrowIfExpenseMadeTwice(
+        string commandUserId, 
+        DateTime commandExpenseDate, 
+        int commandAmount)
+    {
+        var expenses = await _expenseRepository.GetBy(
+            commandUserId, commandExpenseDate, commandAmount);
+        if(expenses.Any())
+            throw new ExpenseCannotBeMadeTwiceException();
     }
 }

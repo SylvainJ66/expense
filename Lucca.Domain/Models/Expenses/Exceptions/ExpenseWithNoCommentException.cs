@@ -2,7 +2,7 @@ using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Lucca.Domain.Models.Expenses;
+namespace Lucca.Domain.Models.Expenses.Exceptions;
 
 public class ExpenseWithNoCommentException : ProblemDetailsException
 {
