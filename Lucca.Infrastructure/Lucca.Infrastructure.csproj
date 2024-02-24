@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Users\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lucca.Domain\Lucca.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
