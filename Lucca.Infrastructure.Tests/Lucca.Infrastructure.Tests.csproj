@@ -22,4 +22,11 @@
       <ProjectReference Include="..\Lucca.Shared.Tests\Lucca.Shared.Tests.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\Lucca.Shared.Ressources\Bdd\expense-ddl.sql">
+            <Link>Bdd\expense-ddl.sql</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>

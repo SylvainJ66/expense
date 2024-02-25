@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Lucca.Infrastructure.Tests.Sql.Expenses;
 
-public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>
+public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>, IDisposable
 {
     private readonly IntegrationTestFixture _fixture;
     private readonly DeterministicDateTimeProvider _dateTimeProvider = new();
@@ -58,4 +58,7 @@ public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>
         
         expenseEf.Should().BeEquivalentTo(expectedExpenseEf);
     }
+
+    public void Dispose() 
+        => _fixture.ResetDatabase();
 }
