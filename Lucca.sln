@@ -13,6 +13,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReadSide", "ReadSide", "{FD926A7C-CD77-471E-BA7A-2A0A9C0DC327}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WriteSide", "WriteSide", "{6B83CF8E-095C-425C-9E77-E4C00EB750E5}"
+	ProjectSection(SolutionItems) = preProject
+		CreateAnExpense.md = CreateAnExpense.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.ReadSide.Api", "Lucca.ReadSide.Api\Lucca.ReadSide.Api.csproj", "{32A23D05-B490-4904-B407-2D41F78BB1FB}"
 EndProject

@@ -1,30 +1,33 @@
 using Lucca.Infrastructure.Sql.Contexts;
-using Lucca.Shared.Tests;
 using Microsoft.EntityFrameworkCore;
+using Testcontainers.PostgreSql;
 using Xunit;
 
 namespace Lucca.Infrastructure.Tests;
 
 public class IntegrationTestFixture : IAsyncLifetime
 {
-    private readonly PgTestContainerRunner _pgTestContainerRunner = new();
+    private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder()
+        .WithImage("postgres:15-alpine")
+        .Build();
+
     public ExpenseDbContext ExpenseDbContext { get; private set; } = null!;
     
     public async Task InitializeAsync()
     {
-        await _pgTestContainerRunner.Init();
+        await _postgres.StartAsync();
         ExpenseDbContext = NewDbContextInstance();
     }
 
     public async Task DisposeAsync()
     {
-        await _pgTestContainerRunner.Down();
+        await _postgres.DisposeAsync().AsTask();
     }
 
     private ExpenseDbContext NewDbContextInstance()
     {
         return new ExpenseDbContext(
-            new DbContextOptionsBuilder().UseNpgsql(_pgTestContainerRunner.ConnectionString()).Options);
+            new DbContextOptionsBuilder().UseNpgsql(_postgres.GetConnectionString()).Options);
     }
 
     public void ResetDatabase()

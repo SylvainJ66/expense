@@ -18,6 +18,8 @@ public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>
     public SqlExpenseRepositoryTests(IntegrationTestFixture fixture)
     {
         _fixture = fixture;
+        _dateTimeProvider.DateOfNow = new DateTime(2024, 1, 2, 14, 15, 3);
+        _idProvider.Id = Guid.Parse("c9e0f0d8-25e7-4224-8494-a802a7ac4f3e");
     }
 
     [Fact]
