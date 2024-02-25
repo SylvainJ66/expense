@@ -4,7 +4,7 @@ using Lucca.Domain.Models.IdProvider;
 
 namespace Lucca.Domain.Models.Expenses;
 
-public class Expense
+public sealed class Expense
 {
     public Guid Id { get; }
     public Guid UserId { get; }
@@ -76,5 +76,27 @@ public class Expense
     {
         if(string.IsNullOrWhiteSpace(commandComment))
             throw new ExpenseWithNoCommentException();
+    }
+
+    public static Expense From(
+        Guid id, 
+        Guid userId,
+        DateTime expenseDate, 
+        DateTime createdAt, 
+        ExpenseType type, 
+        decimal amount, 
+        string currency, 
+        string comment 
+        )
+    {
+        return new Expense(
+            id: id, 
+            userId: userId, 
+            expenseDate: expenseDate, 
+            createdAt: createdAt, 
+            type: type, 
+            amount: amount, 
+            currency: currency, 
+            comment: comment);
     }
 }

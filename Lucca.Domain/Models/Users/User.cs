@@ -2,7 +2,7 @@ using Lucca.Domain.Models.IdProvider;
 
 namespace Lucca.Domain.Models.Users;
 
-public class User
+public sealed class User
 {
     public Guid Id { get; }
     public string Firstname { get; }
@@ -31,6 +31,19 @@ public class User
             idProvider.NewId(), 
             firstname, 
             name, 
+            currency);
+    }
+
+    public static User From(
+        Guid id, 
+        string name, 
+        string firstname, 
+        string currency)
+    {
+        return new User(
+            id, 
+            name, 
+            firstname, 
             currency);
     }
 }

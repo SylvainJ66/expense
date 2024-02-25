@@ -32,6 +32,20 @@ public class SqlExpenseRepository : IExpenseRepository
 
     public Task<IEnumerable<Expense>> GetBy(Guid userId, DateTime expenseDate, decimal amount)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(_dbContext.Expenses
+            .Where(e => e.UserId == userId)
+            .Where(e => e.ExpenseDate == expenseDate)
+            .Where(e => e.Amount == amount)
+            .Select(e => Expense.From
+            (
+                e.Id,
+                e.UserId,
+                e.ExpenseDate,
+                e.CreatedAt,
+                Enum.Parse<ExpenseType>(e.ExpenseType),
+                e.Amount,
+                e.Currency,
+                e.Comment
+            )).AsEnumerable());
     }
 }
