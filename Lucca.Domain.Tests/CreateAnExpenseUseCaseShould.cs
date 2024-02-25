@@ -41,14 +41,13 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        await new CreateAnExpenseUseCase(
-                _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        await CreateAnExpenseUseCase(command);
         
         _expenseRepository.Expenses.Should().BeEquivalentTo(new List<Expense>
         {
             Expense.Create
             (
+                idProvider: _idProvider,
                 dateTimeProvider: _dateTimeProvider,
                 userId: _user.Id,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -73,9 +72,7 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(
-                _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        var action = () => CreateAnExpenseUseCase(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseDateInTheFutureException>()
             .WithMessage(" : Expense date cannot be in the future");
@@ -94,9 +91,7 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(
-                _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        var action = () => CreateAnExpenseUseCase(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseDateMoreThanThreeMonthsInThePastException>()
             .WithMessage(" : Expense date cannot be more than three months in the past");
@@ -117,9 +112,7 @@ public class CreateAnExpenseUseCaseShould
             Comment: comment
         );
         
-        var action = () => new CreateAnExpenseUseCase(
-                _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        var action = () => CreateAnExpenseUseCase(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseWithNoCommentException>()
             .WithMessage(" : Expense should have a comment");
@@ -132,6 +125,7 @@ public class CreateAnExpenseUseCaseShould
         const int amount = 100;
         
         await _expenseRepository.FeedWith(Expense.Create(
+            idProvider: _idProvider,
             dateTimeProvider: _dateTimeProvider,
             userId: _user.Id,
             type: ExpenseType.Hotel,
@@ -151,9 +145,7 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(
-                _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        var action = () => CreateAnExpenseUseCase(command);
         
         await action.Should().ThrowExactlyAsync<ExpenseCannotBeMadeTwiceException>()
             .WithMessage(" : Expense cannot be made twice");
@@ -172,11 +164,16 @@ public class CreateAnExpenseUseCaseShould
             Comment: "Lunch"
         );
         
-        var action = () => new CreateAnExpenseUseCase(
-            _expenseRepository, _userRepository, _dateTimeProvider)
-            .Handle(command);
+        var action = () => CreateAnExpenseUseCase(command);
 
         await action.Should().ThrowExactlyAsync<ExpenseAndUserCannotHaveDifferentCurrency>()
             .WithMessage(" : Expense and user cannot have different currency");
+    }
+    
+    private async Task CreateAnExpenseUseCase(CreateAnExpenseCommand command)
+    {
+        await new CreateAnExpenseUseCase(
+                _expenseRepository, _userRepository, _dateTimeProvider, _idProvider)
+            .Handle(command);
     }
 }

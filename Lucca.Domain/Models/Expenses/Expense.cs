@@ -1,10 +1,12 @@
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses.Exceptions;
+using Lucca.Domain.Models.IdProvider;
 
 namespace Lucca.Domain.Models.Expenses;
 
 public class Expense
 {
+    public Guid Id { get; }
     public Guid UserId { get; }
     public DateTime ExpenseDate { get; }
     public DateTime CreatedAt { get; }
@@ -14,6 +16,7 @@ public class Expense
     public string Comment { get; }
     
     private Expense(
+        Guid id,
         Guid userId, 
         DateTime expenseDate,
         DateTime createdAt, 
@@ -22,6 +25,7 @@ public class Expense
         string currency, 
         string comment)
     {
+        Id = id;
         UserId = userId;
         ExpenseDate = expenseDate;
         CreatedAt = createdAt;
@@ -32,6 +36,7 @@ public class Expense
     }
 
     public static Expense Create(
+        IIdProvider idProvider,
         IDateTimeProvider dateTimeProvider,
         Guid userId, 
         DateTime expenseDate,
@@ -45,6 +50,7 @@ public class Expense
         ThrowIfNoComment(comment);
         
         return new Expense(
+            id: idProvider.NewId(),
             userId, 
             expenseDate, 
             createdAt: dateTimeProvider.UtcNow(), 

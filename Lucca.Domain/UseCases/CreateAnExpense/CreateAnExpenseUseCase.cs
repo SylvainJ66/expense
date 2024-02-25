@@ -2,6 +2,7 @@ using Lucca.Domain.Gateways;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
 using Lucca.Domain.Models.Expenses.Exceptions;
+using Lucca.Domain.Models.IdProvider;
 using Lucca.Domain.Models.Users.Exceptions;
 
 namespace Lucca.Domain.UseCases.CreateAnExpense;
@@ -11,15 +12,18 @@ public class CreateAnExpenseUseCase
     private readonly IExpenseRepository _expenseRepository;
     private readonly IUserRepository _userRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IIdProvider _idProvider;
 
     public CreateAnExpenseUseCase(
         IExpenseRepository expenseRepository,
         IUserRepository userRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider, 
+        IIdProvider idProvider)
     {
         _expenseRepository = expenseRepository;
         _userRepository = userRepository;
         _dateTimeProvider = dateTimeProvider;
+        _idProvider = idProvider;
     }
         
     public async Task Handle(CreateAnExpenseCommand command)
@@ -32,6 +36,7 @@ public class CreateAnExpenseUseCase
         
         await _expenseRepository.Save(Expense.Create
         (
+            idProvider: _idProvider,
             dateTimeProvider:_dateTimeProvider,
             userId: command.UserId,
             expenseDate: command.ExpenseDate,
