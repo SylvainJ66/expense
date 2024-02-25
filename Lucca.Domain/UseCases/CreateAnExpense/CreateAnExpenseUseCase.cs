@@ -43,7 +43,7 @@ public class CreateAnExpenseUseCase
     }
 
     private async Task ThrowIfUserHasDifferentCurrency(
-        string commandUserId, 
+        Guid commandUserId, 
         string commandCurrency)
     {
         var user = await _userRepository.GetBy(commandUserId);
@@ -56,7 +56,7 @@ public class CreateAnExpenseUseCase
     }
 
     private async Task ThrowIfExpenseAlreadyExists(
-        string commandUserId, 
+        Guid commandUserId, 
         DateTime commandExpenseDate, 
         decimal commandAmount)
     {

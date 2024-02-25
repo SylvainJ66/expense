@@ -13,7 +13,7 @@ public class InMemoryExpenseRepositoryStub : IExpenseRepository
     }
 
     public Task<IEnumerable<Expense>> GetBy(
-        string userId, 
+        Guid userId, 
         DateTime expenseDate, 
         decimal amount)
     {

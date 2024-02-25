@@ -19,7 +19,7 @@ public class CreateAnExpenseUseCaseShould
     public CreateAnExpenseUseCaseShould()
     {
         _dateTimeProvider.DateOfNow = new DateTime(2024, 1, 2, 14, 15, 3);
-        _idProvider.Id = "user-id";
+        _idProvider.Id = Guid.Parse("c9e0f0d8-25e7-4224-8494-a802a7ac4f3e");
         _user = User.Create(
             idProvider: _idProvider,
             firstname: "John", 
@@ -33,7 +33,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             Type: ExpenseType.Restaurant,
             Amount: 100,
             ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -50,7 +50,7 @@ public class CreateAnExpenseUseCaseShould
             Expense.Create
             (
                 dateTimeProvider: _dateTimeProvider,
-                userId: _user.UserId,
+                userId: _user.Id,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
                 type: ExpenseType.Restaurant,
                 amount: 100,
@@ -65,7 +65,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             ExpenseDate: new DateTime(2025, 1, 2, 00, 00, 00),
             Type: ExpenseType.Restaurant,
             Amount: 100,
@@ -86,7 +86,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             ExpenseDate: new DateTime(2023, 10, 2, 10, 15, 3),
             Type: ExpenseType.Restaurant,
             Amount: 100,
@@ -109,7 +109,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             Type: ExpenseType.Restaurant,
             Amount: 100,
             ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -133,7 +133,7 @@ public class CreateAnExpenseUseCaseShould
         
         await _expenseRepository.FeedWith(Expense.Create(
             dateTimeProvider: _dateTimeProvider,
-            userId: _user.UserId,
+            userId: _user.Id,
             type: ExpenseType.Hotel,
             expenseDate: expenseDate,
             amount: amount,
@@ -143,7 +143,7 @@ public class CreateAnExpenseUseCaseShould
         
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             Type: ExpenseType.Restaurant,
             Amount: amount,
             ExpenseDate: expenseDate,
@@ -164,7 +164,7 @@ public class CreateAnExpenseUseCaseShould
     {
         var command = new CreateAnExpenseCommand
         (
-            UserId: _user.UserId,
+            UserId: _user.Id,
             Type: ExpenseType.Restaurant,
             Amount: 100,
             ExpenseDate: new DateTime(2024, 1, 1, 00, 00, 00),

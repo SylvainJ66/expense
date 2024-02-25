@@ -5,7 +5,7 @@ namespace Lucca.Domain.Models.Expenses;
 
 public class Expense
 {
-    public string UserId { get; }
+    public Guid UserId { get; }
     public DateTime ExpenseDate { get; }
     public DateTime CreatedAt { get; }
     public ExpenseType Type { get; }
@@ -14,7 +14,7 @@ public class Expense
     public string Comment { get; }
     
     private Expense(
-        string userId, 
+        Guid userId, 
         DateTime expenseDate,
         DateTime createdAt, 
         ExpenseType type, 
@@ -33,7 +33,7 @@ public class Expense
 
     public static Expense Create(
         IDateTimeProvider dateTimeProvider,
-        string userId, 
+        Guid userId, 
         DateTime expenseDate,
         ExpenseType type, 
         decimal amount, 

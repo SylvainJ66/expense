@@ -6,7 +6,7 @@ public interface IExpenseRepository
 {
     Task Save(Expense expense);
     Task<IEnumerable<Expense>> GetBy(
-        string userId, 
+        Guid userId, 
         DateTime expenseDate, 
         decimal amount);
 }

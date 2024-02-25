@@ -4,18 +4,18 @@ namespace Lucca.Domain.Models.Users;
 
 public class User
 {
-    public string UserId { get; }
+    public Guid Id { get; }
     public string Firstname { get; }
     public string Name { get; }
     public string Currency { get; }
     
     private User(
-        string userId, 
+        Guid id, 
         string firstname, 
         string name, 
         string currency)
     {
-        UserId = userId;
+        Id = id;
         Firstname = firstname;
         Name = name;
         Currency = currency;

@@ -4,5 +4,5 @@ namespace Lucca.Domain.Gateways;
 
 public interface IUserRepository
 {
-    Task<User?> GetBy(string userId);
+    Task<User?> GetBy(Guid userId);
 }
