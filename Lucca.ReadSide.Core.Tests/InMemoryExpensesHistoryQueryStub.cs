@@ -5,12 +5,12 @@ namespace Lucca.ReadSide.Core.Tests;
 
 public class InMemoryExpensesHistoryQueryStub : IExpensesHistoryQuery
 {
-    public Dictionary<Guid, ExpensesHistoryReadModel> ExpensesByUserIds { get; set; } = new();
+    public Dictionary<Guid, ExpensesHistoryReadModel> ExpensesByUserIds { get; } = new();
 
-    public async Task<ExpensesHistoryReadModel> ByUser(Guid userId)
+    public Task<ExpensesHistoryReadModel> ByUser(Guid userId)
     {
-        return ExpensesByUserIds.TryGetValue(userId, out var expenses) 
+        return Task.FromResult(ExpensesByUserIds.TryGetValue(userId, out var expenses) 
             ? expenses 
-            : new ExpensesHistoryReadModel();
+            : new ExpensesHistoryReadModel());
     }
 }
