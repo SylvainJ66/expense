@@ -1,0 +1,15 @@
+@Lucca.Api_HostAddress = http://localhost:5055
+
+###
+POST {{Lucca.Api_HostAddress}}/expenses
+Accept: application/json
+Content-Type: application/json
+
+{
+  "userId": "442827b1-92c4-4c06-8a2e-be00c9da0861",
+  "type": "Hotel",
+  "amount": 100.0,
+  "expenseDate": "2024-01-01",
+  "currency": "USD",
+  "comment": "Hotel for the night"
+}
