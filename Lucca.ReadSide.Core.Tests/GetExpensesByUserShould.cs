@@ -6,12 +6,12 @@ namespace Lucca.ReadSide.Core.Tests;
 public class GetExpensesByUserShould
 {
     private readonly InMemoryExpensesHistoryQueryStub _expenseQuery = new();
-    private readonly ExpenseReadModel _firstExpense;
-    private readonly ExpenseReadModel _secondExpense;
+    private readonly ExpenseReadModel _anExpense;
+    private readonly ExpenseReadModel _anOtherExpense;
 
     public GetExpensesByUserShould()
     {
-        _firstExpense = new ExpenseReadModel(
+        _anExpense = new ExpenseReadModel(
             Id: Guid.Parse("e9a1c841-2e6d-4853-8b51-c53896e49fab"),
             UserId: Guid.Parse("5b2928b9-cc09-4d33-9bb2-b9fc7d6a1a9a"),
             Type: "Hotel",
@@ -20,7 +20,7 @@ public class GetExpensesByUserShould
             Currency: "EUR",
             Comment: "Comment");
         
-        _secondExpense = new ExpenseReadModel(
+        _anOtherExpense = new ExpenseReadModel(
             Id: Guid.Parse("a8815a61-9f9f-418a-9d16-aca5104fc5e7"),
             UserId: Guid.Parse("602447bf-c467-4b14-8f72-405125fe9a54"),
             Type: "Misc",
@@ -33,7 +33,7 @@ public class GetExpensesByUserShould
     [Fact]
     public async Task Return_an_empty_list_when_no_expenses()
     {
-        var expenses = await new GetExpensesByUserUseCase().Handle(Guid.Parse("00000000-0000-0000-0000-000000000000"));
+        var expenses = await new GetExpensesByUserUseCase(_expenseQuery).Handle(Guid.Parse("00000000-0000-0000-0000-000000000000"));
         expenses.NumberOfExpenses.Should().Be(0);
     }
     
@@ -42,24 +42,18 @@ public class GetExpensesByUserShould
     {
        _expenseQuery.ExpensesByUserIds.Add(
            Guid.Parse("5b2928b9-cc09-4d33-9bb2-b9fc7d6a1a9a"),
-           new ExpensesHistoryReadModel(
-               1,
-               [_firstExpense]));
+           new ExpensesHistoryReadModel(1, [_anExpense]));
+       
+       
+       _expenseQuery.ExpensesByUserIds.Add(
+           Guid.Parse("a8815a61-9f9f-418a-9d16-aca5104fc5e7"),
+           new ExpensesHistoryReadModel(1, [_anOtherExpense]));
         
-        var expenses = await new GetExpensesByUserUseCase().Handle(Guid.Parse("00000000-0000-0000-0000-000000000000"));
+        var expenses = await new GetExpensesByUserUseCase(_expenseQuery).Handle(Guid.Parse("5b2928b9-cc09-4d33-9bb2-b9fc7d6a1a9a"));
         
         expenses.NumberOfExpenses.Should().Be(1);
-        expenses.Should().BeEquivalentTo(new List<ExpenseReadModel>
-        {
-            new(
-                Guid.Parse("e9a1c841-2e6d-4853-8b51-c53896e49fab"),
-                Guid.Parse("5b2928b9-cc09-4d33-9bb2-b9fc7d6a1a9a"),
-                "Hotel",
-                100,
-                DateTime.Parse("2022-01-01"),
-                "EUR",
-                "Comment"
-            )
-        });
+        expenses.Should().BeEquivalentTo(new ExpensesHistoryReadModel(
+            1,
+            [_anExpense]));
     }
 }

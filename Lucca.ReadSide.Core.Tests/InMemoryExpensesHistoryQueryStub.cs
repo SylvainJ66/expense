@@ -9,6 +9,8 @@ public class InMemoryExpensesHistoryQueryStub : IExpensesHistoryQuery
 
     public async Task<ExpensesHistoryReadModel> ByUser(Guid userId)
     {
-        return await Task.FromResult(ExpensesByUserIds[userId]);
+        return ExpensesByUserIds.TryGetValue(userId, out var expenses) 
+            ? expenses 
+            : new ExpensesHistoryReadModel();
     }
 }
