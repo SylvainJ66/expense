@@ -23,4 +23,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lucca.ReadSide.Core\Lucca.ReadSide.Core.csproj" />
+    </ItemGroup>
+
 </Project>
