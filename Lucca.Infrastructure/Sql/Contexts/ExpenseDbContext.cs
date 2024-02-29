@@ -29,7 +29,7 @@ public class ExpenseDbContext : DbContext
         modelBuilder.Entity<ExpenseEf>()
             .Property(e => e.ExpenseDate)
             .HasColumnName("expense_date")
-            .HasColumnType("timestamp");;
+            .HasColumnType("timestamp");
         modelBuilder.Entity<ExpenseEf>()
             .Property(e => e.CreatedAt)
             .HasColumnName("created_at")

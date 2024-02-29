@@ -36,6 +36,7 @@ builder.Services.AddScoped<ExpenseDbContext>();
 builder.Services.AddScoped<CreateAnExpenseUseCase>();
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 app.UseSwagger();
 app.UseSwaggerUI();
