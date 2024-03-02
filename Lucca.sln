@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.Domain.Tests", "Lucca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.ReadSide.Core.Tests", "Lucca.ReadSide.Core.Tests\Lucca.ReadSide.Core.Tests.csproj", "{F87EE992-D76A-4AFE-983A-1D1EB4896B27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.ReadSide.End2EndTests", "Lucca.ReadSide.End2EndTests\Lucca.ReadSide.End2EndTests.csproj", "{0DDDF3B9-1345-4033-9C3E-032DD20DCE5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.ReadSide.Infrastructure.Tests", "Lucca.ReadSide.Infrastructure.Tests\Lucca.ReadSide.Infrastructure.Tests.csproj", "{0DDDF3B9-1345-4033-9C3E-032DD20DCE5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucca.Infrastructure.Tests", "Lucca.Infrastructure.Tests\Lucca.Infrastructure.Tests.csproj", "{AA33B869-DE17-42C1-AF86-DAA16FDEE31A}"
 EndProject
