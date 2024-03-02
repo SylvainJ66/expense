@@ -1,6 +1,6 @@
 using Lucca.Domain.Gateways;
 using Lucca.Domain.Models.Users;
-using Lucca.Infrastructure.Sql.Contexts;
+using Lucca.Shared.Ressources.Bdd.Contexts;
 
 namespace Lucca.Infrastructure.Sql.Users;
 

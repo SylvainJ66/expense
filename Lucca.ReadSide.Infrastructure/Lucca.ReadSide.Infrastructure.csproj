@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lucca.ReadSide.Core\Lucca.ReadSide.Core.csproj" />
+      <ProjectReference Include="..\Lucca.Shared.Ressources\Lucca.Shared.Ressources.csproj" />
+    </ItemGroup>
+
 </Project>

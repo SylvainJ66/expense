@@ -3,8 +3,8 @@ using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses;
 using Lucca.Domain.Models.IdProvider;
 using Lucca.Domain.Models.Users;
-using Lucca.Infrastructure.Sql.EfModels;
 using Lucca.Infrastructure.Sql.Expenses;
+using Lucca.Shared.Ressources.Bdd.EfModels;
 using Xunit;
 
 namespace Lucca.Infrastructure.Tests.Sql.Expenses;

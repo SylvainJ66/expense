@@ -1,7 +1,7 @@
 using Lucca.Domain.Gateways;
 using Lucca.Domain.Models.Expenses;
-using Lucca.Infrastructure.Sql.Contexts;
-using Lucca.Infrastructure.Sql.EfModels;
+using Lucca.Shared.Ressources.Bdd.Contexts;
+using Lucca.Shared.Ressources.Bdd.EfModels;
 
 namespace Lucca.Infrastructure.Sql.Expenses;
 

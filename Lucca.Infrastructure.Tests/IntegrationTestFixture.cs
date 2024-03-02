@@ -1,4 +1,4 @@
-using Lucca.Infrastructure.Sql.Contexts;
+using Lucca.Shared.Ressources.Bdd.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;

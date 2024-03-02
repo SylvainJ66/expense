@@ -3,9 +3,9 @@ using Lucca.Domain.Gateways;
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.IdProvider;
 using Lucca.Domain.UseCases.CreateAnExpense;
-using Lucca.Infrastructure.Sql.Contexts;
 using Lucca.Infrastructure.Sql.Expenses;
 using Lucca.Infrastructure.Sql.Users;
+using Lucca.Shared.Ressources.Bdd.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

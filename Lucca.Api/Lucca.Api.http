@@ -8,7 +8,7 @@ Content-Type: application/json
 {
   "userId": "f7f04793-c99e-42b0-85bf-3fb7ba6bf6d7",
   "type": "Hotel",
-  "amount": 100.0,
+  "amount": 110.0,
   "expenseDate": "2024-01-01",
   "currency": "USD",
   "comment": "Hotel for the night"

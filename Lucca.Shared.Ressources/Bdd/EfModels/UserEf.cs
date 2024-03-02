@@ -1,4 +1,4 @@
-namespace Lucca.Infrastructure.Sql.EfModels;
+namespace Lucca.Shared.Ressources.Bdd.EfModels;
 
 public class UserEf
 {

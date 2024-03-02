@@ -1,7 +1,7 @@
-using Lucca.Infrastructure.Sql.EfModels;
+using Lucca.Shared.Ressources.Bdd.EfModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lucca.Infrastructure.Sql.Contexts;
+namespace Lucca.Shared.Ressources.Bdd.Contexts;
 
 public class ExpenseDbContext : DbContext
 {
