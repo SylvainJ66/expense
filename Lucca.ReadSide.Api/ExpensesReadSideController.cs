@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Lucca.ReadSide.Core.Models;
 using Lucca.ReadSide.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class ExpensesReadSideController : Controller
 
     [HttpGet]
     public async Task<IActionResult> ByUserId(
-        [FromQuery] Guid userId,
+        [FromQuery, Required] Guid userId,
         [FromQuery] SortType sortType)
     {
         return Ok(await _getExpensesByUserUseCase.Handle(userId, sortType));

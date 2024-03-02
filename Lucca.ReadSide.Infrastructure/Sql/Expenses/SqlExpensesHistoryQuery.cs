@@ -18,13 +18,25 @@ public class SqlExpensesHistoryQuery : IExpensesHistoryQuery
 
     public async Task<ExpensesHistoryReadModel> ByUser(Guid userId, SortType sortType)
     {
-        var expenses = await _dbContext.Expenses
-            .Where(e => e.UserId == userId)
-            .OrderBy(e => e.Amount)
-            .ToListAsync();
-        
+        IQueryable<ExpenseEf> expensesQuery = _dbContext.Expenses
+            .Where(e => e.UserId == userId);
+
+        List<ExpenseEf> expenses;
+        if(sortType is SortType.Amount)
+        {
+            expenses = await expensesQuery
+                .OrderBy(e => e.Amount)
+                .ToListAsync();
+        }
+        else
+        {
+            expenses = await expensesQuery
+                .OrderBy(e => e.ExpenseDate)
+                .ToListAsync();
+        }
+
         var user = await _dbContext.Users
-            .FirstOrDefaultAsync(u => u.Id == userId) 
+                       .FirstOrDefaultAsync(u => u.Id == userId) 
                    ?? throw new Exception("User not found");
 
         return new ExpensesHistoryReadModel(
