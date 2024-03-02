@@ -1,0 +1,6 @@
+@Lucca.ReadSide.Api_HostAddress = http://localhost:5104
+
+GET {{Lucca.ReadSide.Api_HostAddress}}/expenses?userId=f7f04793-c99e-42b0-85bf-3fb7ba6bf6d7
+Accept: application/json
+
+###

@@ -8,38 +8,19 @@ public class InMemoryExpensesHistoryQueryStub : IExpensesHistoryQuery
 {
     public Dictionary<Guid, ExpensesHistoryReadModel> ExpensesByUserIds { get; } = new();
     
-    public Task<ExpensesHistoryReadModel> ByUser(Guid userId)
+    public Task<ExpensesHistoryReadModel> ByUser(Guid userId, SortType sortType)
     {
-        return Task.FromResult(ExpensesByUserIds.TryGetValue(userId, out var expenses) 
-            ? expenses 
-            : new ExpensesHistoryReadModel());
-    }
-
-    public Task<ExpensesHistoryReadModel> SortedBy(SortType sortType)
-    {
-        List<ExpenseReadModel> expenses;
-
-        if (sortType is SortType.Amount)
+        if(ExpensesByUserIds.TryGetValue(userId, out var expenses))
         {
-            expenses = ExpensesByUserIds
-                .Values
-                .SelectMany(e => e.Expenses)
-                .OrderBy(e => e.Amount)
-                .ToList();
+            expenses.Expenses = sortType is SortType.Amount 
+                ? expenses.Expenses.OrderBy(e => e.Amount).ToList() 
+                : expenses.Expenses.OrderBy(e => e.ExpenseDate).ToList();
+            
+            expenses.NumberOfExpenses = expenses.Expenses.Count;
+            
+            return Task.FromResult(expenses);
         }
-        else
-        {
-            expenses = ExpensesByUserIds
-                .Values
-                .SelectMany(e => e.Expenses)
-                .OrderBy(e => e.ExpenseDate)
-                .ToList();
-        }
-        
-        var result = new ExpensesHistoryReadModel(
-            expenses.Count,
-            expenses);
 
-        return Task.FromResult(result);
+        return Task.FromResult(new ExpensesHistoryReadModel());
     }
 }

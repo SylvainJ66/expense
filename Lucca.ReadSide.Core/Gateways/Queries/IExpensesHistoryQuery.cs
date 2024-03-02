@@ -5,6 +5,5 @@ namespace Lucca.ReadSide.Core.Gateways.Queries;
 
 public interface IExpensesHistoryQuery
 {
-    Task<ExpensesHistoryReadModel> ByUser(Guid userId);
-    Task<ExpensesHistoryReadModel> SortedBy(SortType sortType);
+    Task<ExpensesHistoryReadModel> ByUser(Guid userId, SortType sortType);
 }

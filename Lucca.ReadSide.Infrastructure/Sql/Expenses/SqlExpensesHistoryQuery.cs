@@ -2,20 +2,49 @@ using Lucca.ReadSide.Core.Gateways.Queries;
 using Lucca.ReadSide.Core.Models;
 using Lucca.ReadSide.Core.UseCases;
 using Lucca.Shared.Ressources.Bdd.Contexts;
+using Lucca.Shared.Ressources.Bdd.EfModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lucca.ReadSide.Infrastructure.Sql.Expenses;
 
 public class SqlExpensesHistoryQuery : IExpensesHistoryQuery
 {
     private readonly ExpenseDbContext _dbContext;
-    
-    public Task<ExpensesHistoryReadModel> ByUser(Guid userId)
+
+    public SqlExpensesHistoryQuery(ExpenseDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
 
-    public Task<ExpensesHistoryReadModel> SortedBy(SortType sortType)
+    public async Task<ExpensesHistoryReadModel> ByUser(Guid userId, SortType sortType)
     {
-        throw new NotImplementedException();
+        var expenses = await _dbContext.Expenses
+            .Where(e => e.UserId == userId)
+            .OrderBy(e => e.Amount)
+            .ToListAsync();
+        
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId) 
+                   ?? throw new Exception("User not found");
+
+        return new ExpensesHistoryReadModel(
+            expenses.Count,
+            [
+                ..expenses.Select(e => new ExpenseReadModel(
+                    e.Id,
+                    e.UserId,
+                    DisplayUser(user),
+                    e.ExpenseType,
+                    e.Amount,
+                    e.ExpenseDate,
+                    e.Currency,
+                    e.Comment
+                ))
+            ]);
+    }
+
+    private static string DisplayUser(UserEf user)
+    {
+        return user.Firstname + " " + user.Name;
     }
 }
