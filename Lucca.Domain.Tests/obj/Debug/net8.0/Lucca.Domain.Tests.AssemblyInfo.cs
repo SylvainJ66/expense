@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lucca.Domain.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67fa0157e2d147bd8186b7557b24dca48998c604")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0e6231f2dac7ad7e6a459615490732d5bf048b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lucca.Domain.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lucca.Domain.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -2,6 +2,7 @@ using Lucca.Domain.Gateways;
 using Lucca.Domain.Models.Expenses;
 using Lucca.Shared.Ressources.Bdd.Contexts;
 using Lucca.Shared.Ressources.Bdd.EfModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lucca.Infrastructure.Sql.Expenses;
 
@@ -30,9 +31,9 @@ public class SqlExpenseRepository : IExpenseRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<Expense>> GetBy(Guid userId, DateTime expenseDate, decimal amount)
+    public async Task<IEnumerable<Expense>> GetBy(Guid userId, DateTime expenseDate, decimal amount)
     {
-        return Task.FromResult(_dbContext.Expenses
+        return await _dbContext.Expenses
             .Where(e => e.UserId == userId)
             .Where(e => e.ExpenseDate == expenseDate)
             .Where(e => e.Amount == amount)
@@ -46,6 +47,6 @@ public class SqlExpenseRepository : IExpenseRepository
                 e.Amount,
                 e.Currency,
                 e.Comment
-            )).AsEnumerable());
+            )).ToListAsync();
     }
 }

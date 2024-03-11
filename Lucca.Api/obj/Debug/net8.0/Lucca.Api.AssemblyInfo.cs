@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Lucca.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6aa1eaa9f62a0adae4951d036ea809262e403fdd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0e6231f2dac7ad7e6a459615490732d5bf048b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Lucca.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Lucca.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
