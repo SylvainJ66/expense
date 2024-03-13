@@ -33,7 +33,7 @@ public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>, 
         await new SqlExpenseRepository(_fixture.ExpenseDbContext).Save(
             Expense.Create
             (
-                idProvider: _idProvider,
+                id: _idProvider.Id,
                 dateTimeProvider: _dateTimeProvider,
                 user: user,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),

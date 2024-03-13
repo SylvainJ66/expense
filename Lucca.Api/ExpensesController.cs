@@ -19,7 +19,7 @@ public class ExpensesController : Controller
     public async Task<IActionResult> CreateAnExpense(
         [FromBody] ExpensePostBody expensePostBody)
     {
-        await _createAnExpenseUseCase.Handle(new CreateAnExpenseCommand(
+        var id = await _createAnExpenseUseCase.Handle(new CreateAnExpenseCommand(
             UserId:Guid.Parse(expensePostBody.UserId),
             Type: Enum.Parse<ExpenseType>(expensePostBody.Type),
             Amount: expensePostBody.Amount,
@@ -27,7 +27,7 @@ public class ExpensesController : Controller
             Currency: expensePostBody.Currency,
             Comment: expensePostBody.Comment
         ));
-        return Created("expense", "");
+        return Created("expense", id);
     }
 }
 

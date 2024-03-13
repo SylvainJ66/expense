@@ -37,7 +37,7 @@ public sealed class Expense
     }
 
     public static Expense Create(
-        IIdProvider idProvider,
+        Guid id,
         IDateTimeProvider dateTimeProvider,
         User user, 
         DateTime expenseDate,
@@ -52,7 +52,7 @@ public sealed class Expense
         ThrowIfUserHasDifferentCurrency(user, currency);
         
         return new Expense(
-            id: idProvider.NewId(),
+            id: id,
             user.Id, 
             expenseDate, 
             createdAt: dateTimeProvider.UtcNow(), 

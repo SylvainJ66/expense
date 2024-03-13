@@ -40,6 +40,7 @@ public class CreateAnExpenseUseCaseShould
             Currency: "EUR",
             Comment: "Lunch"
         );
+        var expenseId = Guid.Parse("c9e0f0d8-25e7-4224-8494-a802a7ac4f3e");
         
         await CreateAnExpenseUseCase(command);
         
@@ -47,7 +48,7 @@ public class CreateAnExpenseUseCaseShould
         {
             Expense.Create
             (
-                idProvider: _idProvider,
+                id: expenseId,
                 dateTimeProvider: _dateTimeProvider,
                 user: _user,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
@@ -121,11 +122,12 @@ public class CreateAnExpenseUseCaseShould
     [Fact]
     public async Task User_cannot_make_same_expense_twice()
     {
+        var expenseId = Guid.Parse("c9e0f0d8-25e7-4224-8494-a802a7ac4f3e");
         var expenseDate = new DateTime(2024, 1, 1, 00, 00, 00);
         const int amount = 100;
         
         await _expenseRepository.FeedWith(Expense.Create(
-            idProvider: _idProvider,
+            id: expenseId,
             dateTimeProvider: _dateTimeProvider,
             user: _user,
             type: ExpenseType.Hotel,

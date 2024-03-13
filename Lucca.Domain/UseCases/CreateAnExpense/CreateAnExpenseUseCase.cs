@@ -26,7 +26,7 @@ public class CreateAnExpenseUseCase
         _idProvider = idProvider;
     }
         
-    public async Task Handle(CreateAnExpenseCommand command)
+    public async Task<Guid> Handle(CreateAnExpenseCommand command)
     {
         await ThrowIfExpenseAlreadyExists(
             command.UserId, command.ExpenseDate, command.Amount);
@@ -35,10 +35,12 @@ public class CreateAnExpenseUseCase
         
         if(user is null)
             throw new UserNotFoundExeption();
+
+        var expenseId = _idProvider.NewId();
         
         await _expenseRepository.Save(Expense.Create
         (
-            idProvider: _idProvider,
+            id: expenseId,
             dateTimeProvider:_dateTimeProvider,
             user: user,
             expenseDate: command.ExpenseDate,
@@ -47,10 +49,11 @@ public class CreateAnExpenseUseCase
             currency: command.Currency,
             comment: command.Comment
         ));
-    }
-    
 
-    public async Task ThrowIfExpenseAlreadyExists(
+        return expenseId;
+    }
+
+    private async Task ThrowIfExpenseAlreadyExists(
         Guid commandUserId, 
         DateTime commandExpenseDate, 
         decimal commandAmount)
