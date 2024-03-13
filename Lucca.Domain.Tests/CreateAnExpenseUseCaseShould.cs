@@ -49,7 +49,7 @@ public class CreateAnExpenseUseCaseShould
             (
                 idProvider: _idProvider,
                 dateTimeProvider: _dateTimeProvider,
-                userId: _user.Id,
+                user: _user,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
                 type: ExpenseType.Restaurant,
                 amount: 100,
@@ -127,7 +127,7 @@ public class CreateAnExpenseUseCaseShould
         await _expenseRepository.FeedWith(Expense.Create(
             idProvider: _idProvider,
             dateTimeProvider: _dateTimeProvider,
-            userId: _user.Id,
+            user: _user,
             type: ExpenseType.Hotel,
             expenseDate: expenseDate,
             amount: amount,

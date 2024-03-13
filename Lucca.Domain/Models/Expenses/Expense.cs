@@ -1,6 +1,7 @@
 using Lucca.Domain.Models.DateTimeProvider;
 using Lucca.Domain.Models.Expenses.Exceptions;
 using Lucca.Domain.Models.IdProvider;
+using Lucca.Domain.Models.Users;
 
 namespace Lucca.Domain.Models.Expenses;
 
@@ -38,7 +39,7 @@ public sealed class Expense
     public static Expense Create(
         IIdProvider idProvider,
         IDateTimeProvider dateTimeProvider,
-        Guid userId, 
+        User user, 
         DateTime expenseDate,
         ExpenseType type, 
         decimal amount, 
@@ -48,10 +49,11 @@ public sealed class Expense
         ThrowIfDateIsInTheFuture(dateTimeProvider, expenseDate);
         ThrowIfDateIsMoreThanThreeMonthsInThePast(dateTimeProvider, expenseDate);
         ThrowIfNoComment(comment);
+        ThrowIfUserHasDifferentCurrency(user, currency);
         
         return new Expense(
             id: idProvider.NewId(),
-            userId, 
+            user.Id, 
             expenseDate, 
             createdAt: dateTimeProvider.UtcNow(), 
             type, 
@@ -59,7 +61,13 @@ public sealed class Expense
             currency, 
             comment);
     }
-    
+
+    private static void ThrowIfUserHasDifferentCurrency(User user, string currency)
+    {
+        if(user.Currency != currency)
+            throw new ExpenseAndUserCannotHaveDifferentCurrency();
+    }
+
     private static void ThrowIfDateIsInTheFuture(IDateTimeProvider dateTimeProvider, DateTime commandExpenseDate)
     {
         if(commandExpenseDate > dateTimeProvider.UtcNow())

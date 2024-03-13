@@ -31,14 +31,16 @@ public class CreateAnExpenseUseCase
         await ThrowIfExpenseAlreadyExists(
             command.UserId, command.ExpenseDate, command.Amount);
         
-        await ThrowIfUserHasDifferentCurrency(
-            command.UserId, command.Currency);
+        var user = await _userRepository.GetBy(command.UserId);
+        
+        if(user is null)
+            throw new UserNotFoundExeption();
         
         await _expenseRepository.Save(Expense.Create
         (
             idProvider: _idProvider,
             dateTimeProvider:_dateTimeProvider,
-            userId: command.UserId,
+            user: user,
             expenseDate: command.ExpenseDate,
             type: command.Type,
             amount: command.Amount,
@@ -46,21 +48,9 @@ public class CreateAnExpenseUseCase
             comment: command.Comment
         ));
     }
+    
 
-    private async Task ThrowIfUserHasDifferentCurrency(
-        Guid commandUserId, 
-        string commandCurrency)
-    {
-        var user = await _userRepository.GetBy(commandUserId);
-        
-        if(user is null)
-            throw new UserNotFoundExeption();
-        
-        if(user.Currency != commandCurrency)
-            throw new ExpenseAndUserCannotHaveDifferentCurrency();
-    }
-
-    private async Task ThrowIfExpenseAlreadyExists(
+    public async Task ThrowIfExpenseAlreadyExists(
         Guid commandUserId, 
         DateTime commandExpenseDate, 
         decimal commandAmount)

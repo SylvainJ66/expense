@@ -35,7 +35,7 @@ public class SqlExpenseRepositoryTests : IClassFixture<IntegrationTestFixture>, 
             (
                 idProvider: _idProvider,
                 dateTimeProvider: _dateTimeProvider,
-                userId: user.Id,
+                user: user,
                 expenseDate: new DateTime(2024, 1, 1, 00, 00, 00),
                 type: ExpenseType.Restaurant,
                 amount: 100,
